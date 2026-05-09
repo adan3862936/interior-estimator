@@ -1,0 +1,19 @@
+{
+  "name": "台灣室內設計裝修工程估價系統",
+  "short_name": "裝修估價",
+  "description": "室內設計與裝修工程估價、利潤倍率、縣市行情表與離線使用工具。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fbfaf6",
+  "theme_color": "#245c48",
+  "lang": "zh-Hant-TW",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

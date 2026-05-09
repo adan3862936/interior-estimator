@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#245c48">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="裝修估價">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>台灣室內設計裝修工程估價系統</title>
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="apple-touch-icon" href="./icon.svg">
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Winning Interior Renovation</p>
+        <h1>室內設計裝修工程估價系統</h1>
+        <p class="lede">依北中南參考行情建立基準單價，可逐項輸入數量、區域、利潤倍率與備註，快速算出成本價、利潤後單價與報價總額。</p>
+      </div>
+      <div class="summary-card" aria-live="polite">
+        <span>報價總額</span>
+        <strong id="grandTotal">NT$0</strong>
+        <small id="summaryMeta">0 個工項，平均倍率 1.20</small>
+      </div>
+    </header>
+
+    <main>
+      <section class="controls" aria-label="估價控制">
+        <label>
+          專案名稱
+          <input id="projectName" type="text" value="住宅裝修工程估價單">
+        </label>
+        <label>
+          主要區域
+          <select id="regionSelect">
+            <option value="north">北部</option>
+            <option value="central">中部</option>
+            <option value="south">南部</option>
+          </select>
+        </label>
+        <label>
+          全表預設利潤倍率
+          <input id="globalProfit" type="number" min="1" step="0.01" value="1.20">
+        </label>
+        <label>
+          單價取值
+          <select id="priceMode">
+            <option value="mid">行情中位數</option>
+            <option value="low">保守低標</option>
+            <option value="high">高規高標</option>
+          </select>
+        </label>
+        <div class="button-row">
+          <button id="applyRegionBtn" type="button">套用區域行情</button>
+          <button id="applyProfitBtn" type="button">套用倍率</button>
+          <button id="addItemBtn" type="button">新增工項</button>
+          <button id="saveBtn" type="button">儲存</button>
+          <button id="resetBtn" type="button">重置</button>
+          <button id="exportBtn" type="button">匯出 CSV</button>
+          <button id="printBtn" type="button">列印 / 存 PDF</button>
+        </div>
+        <p class="save-status" id="saveStatus">估價內容會自動儲存在這台裝置。</p>
+      </section>
+
+      <section class="market-panel" aria-label="各縣市工程市場行情表">
+        <div class="panel-head">
+          <div>
+            <h2>各縣市工程市場行情表</h2>
+            <p>先加入台中市行情。可選工項匯入估價明細，再依你的案場條件調整數量、成本單價與利潤倍率。</p>
+          </div>
+          <div class="market-controls">
+            <label>
+              縣市
+              <select id="cityMarketSelect">
+                <option value="taichung">台中市</option>
+              </select>
+            </label>
+            <button id="addSelectedMarketBtn" type="button">加入選取行情</button>
+          </div>
+        </div>
+        <div class="market-meta" id="cityMarketMeta"></div>
+        <div class="table-wrap">
+          <table class="market-table">
+            <thead>
+              <tr>
+                <th>選取</th>
+                <th>分類</th>
+                <th>市場行情項目</th>
+                <th>單位</th>
+                <th>低標</th>
+                <th>高標</th>
+                <th>中位數</th>
+                <th>備註</th>
+              </tr>
+            </thead>
+            <tbody id="marketBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="totals-grid" aria-label="估價摘要">
+        <article>
+          <span>成本小計</span>
+          <strong id="costTotal">NT$0</strong>
+        </article>
+        <article>
+          <span>利潤金額</span>
+          <strong id="profitTotal">NT$0</strong>
+        </article>
+        <article>
+          <span>平均利潤倍率</span>
+          <strong id="avgProfit">1.20</strong>
+        </article>
+        <article>
+          <span>未稅參考</span>
+          <strong id="taxHint">可另加 5% 營業稅</strong>
+        </article>
+      </section>
+
+      <section class="estimate-panel">
+        <div class="panel-head">
+          <div>
+            <h2>工程明細</h2>
+            <p>單價為公開行情整理後的參考基準，正式報價仍需依現場丈量、材料品牌、五金等級、樓層搬運與工序銜接調整。</p>
+          </div>
+          <label class="search-box">
+            搜尋工項
+            <input id="searchInput" type="search" placeholder="例如：木作、高櫃、防水、水電">
+          </label>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>啟用</th>
+                <th>分類</th>
+                <th>工項 / 材料與功法</th>
+                <th>單位</th>
+                <th>數量</th>
+                <th>成本單價</th>
+                <th>利潤倍率</th>
+                <th>利潤後單價</th>
+                <th>小計</th>
+                <th>備註</th>
+              </tr>
+            </thead>
+            <tbody id="itemsBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="notes">
+        <article>
+          <h2>使用提醒</h2>
+          <p>像你舉例的「木作高櫃一尺 8,000 元」，可以在成本單價填 8000，再於利潤倍率填 1.2 或 1.25，系統會自動算出利潤後單價與小計。北中南按一般市場區域差異先做倍率調整，遇到偏鄉、無電梯、急件、特殊材料或老屋不確定因素，請另外加列搬運、拆除、補強、保護與清運項目。</p>
+        </article>
+        <article>
+          <h2>行情來源</h2>
+          <ul>
+            <li><a href="https://www.100.com.tw/article/9443?itm_content=old_vision" target="_blank" rel="noreferrer">100室內設計：2025 裝潢費用與常見工項行情</a></li>
+            <li><a href="https://www.100.com.tw/article/3471" target="_blank" rel="noreferrer">100室內設計：系統櫃估價方式與高櫃、五金行情</a></li>
+            <li><a href="https://www.tasker.com.tw/price/interior-design" target="_blank" rel="noreferrer">出任務：2026 室內設計費與統包工程行情</a></li>
+            <li><a href="https://www.mb-design.com.tw/news-3.html" target="_blank" rel="noreferrer">台南在地裝潢行情：南部泥作、水電、油漆、木工參考</a></li>
+            <li><a href="https://www.arcnet.org.tw/system/articals/files/000/001/249/original/114.10.23%E5%B8%82%E5%A0%B4%E8%B3%87%E8%A8%8A114%E5%B9%B4Q4%E5%B7%A5%E7%A8%8B%E5%B8%82%E5%A0%B4%E8%A1%8C%E6%83%85%E8%A1%A8-.pdf" target="_blank" rel="noreferrer">臺中市不動產建築開發商業同業公會：114 年 Q4 工程市場行情表</a></li>
+            <li><a href="https://std-build.com/blog/taichung-renovation-company-recommendation-2026" target="_blank" rel="noreferrer">標準建築：2026 台中住宅裝修坪單價參考</a></li>
+          </ul>
+        </article>
+      </section>
+    </main>
+
+    <template id="itemTemplate">
+      <tr>
+        <td><input class="active-input" type="checkbox" checked aria-label="啟用此工項"></td>
+        <td><input class="category-input" type="text"></td>
+        <td><input class="name-input" type="text"></td>
+        <td><input class="unit-input" type="text"></td>
+        <td><input class="qty-input" type="number" min="0" step="0.01"></td>
+        <td><input class="cost-input" type="number" min="0" step="1"></td>
+        <td><input class="profit-input" type="number" min="1" step="0.01"></td>
+        <td class="money profit-price">NT$0</td>
+        <td class="money line-total">NT$0</td>
+        <td><input class="note-input" type="text"></td>
+      </tr>
+    </template>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
