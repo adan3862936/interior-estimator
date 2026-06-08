@@ -295,8 +295,8 @@ const cityMarketRates = {
         name: "地坪 1:3 打底工資",
         unit: "㎡",
         low: 280,
-        high: 340,
-        note: "公共空間地坪，115 年 Q1 區間",
+        high: 310,
+        note: "公共空間地坪，115 年 Q2 官方表：較 Q1 的 280-340 元/㎡ 下修上限 30 元",
       },
       {
         category: "泥作",
@@ -335,8 +335,8 @@ const cityMarketRates = {
         name: "地坪貼拋光石英磚 80x80cm",
         unit: "㎡",
         low: 580,
-        high: 800,
-        note: "含吊料、硬底，115 年 Q1 區間",
+        high: 750,
+        note: "含吊料、硬底，115 年 Q2 官方表：較 Q1 的 580-800 元/㎡ 下修上限 50 元",
       },
       {
         category: "防水",
