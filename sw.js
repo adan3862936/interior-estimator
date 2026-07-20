@@ -1,4 +1,4 @@
-const CACHE_NAME = "interior-estimator-v8";
+const CACHE_NAME = "interior-estimator-v9";
 const APP_ASSETS = [
   "./",
   "./index.html",
